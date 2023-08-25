@@ -22,8 +22,8 @@ public class Comment {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "author_id")
-    private Long authorId;
+    @Column(name = "user_id")
+    private Long userId;
 
     private String comment;
 }

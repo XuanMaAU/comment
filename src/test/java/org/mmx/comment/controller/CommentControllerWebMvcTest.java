@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -19,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Web MVC Test for CommentController
+ * Web MVC Test for CommentController with default security
  */
 @WebMvcTest(CommentController.class)
 public class CommentControllerWebMvcTest {
@@ -38,29 +40,33 @@ public class CommentControllerWebMvcTest {
     private Comment expComment = new Comment(Long.valueOf(commentId), Long.valueOf(authorId), newContent);
 
     @Test
+    @WithMockUser
     public void testEdit_success() throws Exception {
         // given:
         doReturn(expComment).when(service).editComment(commentId, newContent);
 
         // when:
         mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContent))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(commentId))
-            .andExpect(jsonPath("$.authorId").value(authorId))
+            .andExpect(jsonPath("$.userId").value(authorId))
             .andExpect(jsonPath("$.comment").value(newContent))
             ;
     }
 
     @Test
+    @WithMockUser
     public void testEdit_notFound() throws Exception {
         // given:
         doThrow(new CommentNotFoundException(commentId)).when(service).editComment(commentId, newContent);
 
         // when:
         mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContent))
             .andDo(print())
@@ -70,11 +76,27 @@ public class CommentControllerWebMvcTest {
     }
 
     @Test
+    public void testEdit_unauthorized() throws Exception {
+        // given:
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContent))
+            .andDo(print())
+            .andExpect(status().isUnauthorized())
+            ;
+    }
+
+    @Test
+    @WithMockUser
     public void testDelete_success() throws Exception {
         // given:
 
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", commentId)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isNoContent())
@@ -83,16 +105,32 @@ public class CommentControllerWebMvcTest {
     }
 
     @Test
+    @WithMockUser
     public void testDelete_notFound() throws Exception {
         // given:
         doThrow(new CommentNotFoundException(commentId)).when(service).delete(commentId);
 
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", commentId)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.commentId").value(commentId))
             ;
     }
+
+    @Test
+    public void testDelete_unauthorized() throws Exception {
+        // given:
+
+        // when:
+        mockMvc.perform(delete("/api/v1/comments/{id}", commentId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isUnauthorized())
+            ;
+    }
+
 }
