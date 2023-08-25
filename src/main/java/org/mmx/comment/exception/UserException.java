@@ -10,7 +10,7 @@ public class UserException extends RuntimeException {
     private Long id;
     private String name;
 
-    public UserException(long id, String name, String message, Throwable cause) {
+    public UserException(Long id, String name, String message, Throwable cause) {
         super(message, cause);
 
         this.id = id;

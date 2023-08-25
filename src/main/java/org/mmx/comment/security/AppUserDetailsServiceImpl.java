@@ -1,14 +1,10 @@
 package org.mmx.comment.security;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.mmx.comment.domain.User;
+import org.mmx.comment.exception.UserNotFoundException;
 import org.mmx.comment.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,21 +28,24 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
         this.userService = userService;
     }
 
+    /**
+     * Load the user from database and return security user details
+     *
+     * @param username the username to find the user from
+     *
+     * @return the security user details loaded from database
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Load user by name: {}", username);
 
-        org.mmx.comment.domain.User appUser = userService.findByName(username);
-        log.debug("Loaded User = {}", appUser);
+        try {
+            User user = userService.findByName(username);
+            log.debug("Loaded User = {}", user);
 
-        List<GrantedAuthority> authorities = appUser.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority(role.toString()))
-            .collect(Collectors.toList());
-
-        log.debug("Authorities = {}", authorities);
-
-        User user = new User(appUser.getName(), appUser.getHashedPassword(), authorities);
-
-        return user;
+            return new AppUserDetails(user);
+        } catch (UserNotFoundException e) {
+            throw new UsernameNotFoundException(username, e);
+        }
     }
 }
