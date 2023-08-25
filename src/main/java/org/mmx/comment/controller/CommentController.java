@@ -56,10 +56,8 @@ public class CommentController {
         log.debug("Edit comment: id = {}, content = {}", id, content);
 
         // edit the comment
-        commentService.editComment(id, content);
+        Comment comment = commentService.editComment(id, content);
 
-        // retrieve the new comment object
-        Comment comment = commentService.findById(id);
         CommentDto dto = toDto(comment);
 
         log.debug("Edit comment: id = {}, dto = {}", id, dto);

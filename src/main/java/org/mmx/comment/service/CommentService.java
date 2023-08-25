@@ -25,7 +25,7 @@ public interface CommentService {
      *
      * @throws CommentNotFoundException if the comment with the id doesn't exist in the database
      */
-    void editComment(long id, String comment);
+    Comment editComment(long id, String comment);
 
     /**
      * Delete a comment

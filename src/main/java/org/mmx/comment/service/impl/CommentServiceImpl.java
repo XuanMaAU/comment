@@ -38,13 +38,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void editComment(long id, String comment) {
-        // check existence
-        if (!repo.existsById(id)) {
-            throw new CommentNotFoundException(id);
-        }
+    public Comment editComment(long id, String comment) {
+        // find the existing one
+        Comment commentEntity = findById(id);
+        commentEntity.setComment(comment);
 
-        repo.editComment(id, comment);
+        // save and flush
+        return repo.saveAndFlush(commentEntity);
     }
 
     @Override
