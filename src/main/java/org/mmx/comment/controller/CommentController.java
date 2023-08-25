@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,7 @@ public class CommentController {
      *
      * @return the update comment object
      */
+    @PreAuthorize("@authz.canEdit(#root, #id)")
     @PostMapping("/{id}/editComment")
     public ResponseEntity<CommentDto> edit(@PathVariable long id,
                                            @RequestBody String content) {
@@ -68,6 +70,7 @@ public class CommentController {
     /**
      * Delete the comment with the specified id
      */
+    @PreAuthorize("@authz.canDelete(#root, #id)")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
         log.debug("Delete comment: id = {}", id);
