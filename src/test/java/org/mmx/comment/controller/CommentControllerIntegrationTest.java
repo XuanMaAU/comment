@@ -117,6 +117,24 @@ public class CommentControllerIntegrationTest {
     }
 
     @Test
+    public void testEdit_otherUser() throws Exception {
+        // given:
+        assertEquals(oldComment, service.findById(commentId));
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(httpBasic("user1", "user1"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContent))
+            .andDo(print())
+            .andExpect(status().isForbidden())
+            ;
+
+        // then:
+        assertEquals(oldComment, service.findById(commentId));
+    }
+
+    @Test
     public void testEdit_user_success() throws Exception {
         // given:
         assertEquals(oldComment, service.findById(commentId));
@@ -243,6 +261,23 @@ public class CommentControllerIntegrationTest {
             .andDo(print())
             .andExpect(status().isMethodNotAllowed())
             ;
+    }
+
+    @Test
+    public void testDelete_otherUser() throws Exception {
+        // given:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
+
+        // when:
+        mockMvc.perform(delete("/api/v1/comments/{id}", unauthorizedCommentId)
+                        .with(httpBasic("user1", "user1"))
+                        .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isForbidden())
+            ;
+
+        // then:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
     }
 
     @Test
