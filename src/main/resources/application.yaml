@@ -8,6 +8,6 @@ spring:
     h2:
         console.enabled: true
 
-logging.level.org.hibernate.orm.jdbc.bind: trace
+#logging.level.org.hibernate.orm.jdbc.bind: trace
 #logging.level.org.springframework.security: TRACE
 #logging.level.org.mmx.comment: debug
