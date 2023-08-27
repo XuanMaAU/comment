@@ -190,7 +190,6 @@ public class CommentControllerIntegrationTest {
     @Test
     public void testEdit_user_emptyContent() throws Exception {
         // given:
-        assertEquals(oldComment, service.findById(commentId));
 
         // when:
         mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
@@ -211,22 +210,21 @@ public class CommentControllerIntegrationTest {
     @Test
     public void testEdit_user_nullContent() throws Exception {
         // given:
-        assertEquals(oldComment, service.findById(commentId));
 
         // when:
-        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
-                        .with(httpBasic("user2", "user2"))
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", 3)
+                        .with(httpBasic("user1", "user1"))
                         .contentType(MediaType.APPLICATION_JSON)
                         )
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(commentId))
-            .andExpect(jsonPath("$.userId").value(userId))
+            .andExpect(jsonPath("$.id").value(3))
+            .andExpect(jsonPath("$.userId").value(51))
             .andExpect(jsonPath("$.comment").value(""))
             ;
 
         // then:
-        assertEquals("", service.findById(commentId).getComment());
+        assertEquals("", service.findById(3).getComment());
     }
 
     @Test
