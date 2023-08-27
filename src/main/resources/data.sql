@@ -4,6 +4,8 @@ INSERT INTO author(id, name, hashed_password) VALUES(nextval('author_SEQ'), 'adm
 INSERT INTO author(id, name, hashed_password) VALUES(nextval('author_SEQ'), 'user1', '$2a$10$y19Nll.gLaZap5oPxpX7ouDONK501R8M42rkHR3filUbuX.Ut00Py');
 -- id: 101
 INSERT INTO author(id, name, hashed_password) VALUES(nextval('author_SEQ'), 'user2', '$2a$10$XS/ama2MvTY2/wJmHWkw4.gVh.DffDxbju4v7RhcrZptME6YmGfcG');
+-- id: 102
+INSERT INTO author(id, name, hashed_password) VALUES(nextval('author_SEQ'), 'norole', '$2a$12$wAlkGMQxhXVGR7qMhZrDZumHNNUWv4ONVzHaGGees3m3d4MfbexUi');
 
 INSERT INTO comment(id, user_id, comment) VALUES(1, 51, 'This is the first comment.');
 INSERT INTO comment(id, user_id, comment) VALUES(2, 51, 'This is the second comment.');

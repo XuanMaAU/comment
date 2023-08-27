@@ -25,7 +25,7 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository repo;
 
-    private User expUser = new User(102l, "newUser", "testPassword", Arrays.asList(new UserRole(102l, 102l, SecurityRole.USER)));
+    private User expUser = new User(152l, "newUser", "testPassword", Arrays.asList(new UserRole(102l, 152l, SecurityRole.USER)));
 
     @Test
     public void testFindByName_success() {

@@ -133,10 +133,10 @@ public class CommentControllerIntegrationTest {
     @Test
     public void testEdit_otherUser() throws Exception {
         // given:
-        assertEquals(oldComment, service.findById(commentId));
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
 
         // when:
-        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", unauthorizedCommentId)
                         .with(httpBasic("user1", "user1"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContent))
@@ -145,7 +145,25 @@ public class CommentControllerIntegrationTest {
             ;
 
         // then:
-        assertEquals(oldComment, service.findById(commentId));
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
+    }
+
+    @Test
+    public void testEdit_noRole() throws Exception {
+        // given:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", unauthorizedCommentId)
+                        .with(httpBasic("norole", "norole"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContent))
+            .andDo(print())
+            .andExpect(status().isForbidden())
+            ;
+
+        // then:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
     }
 
     @Test
@@ -280,7 +298,7 @@ public class CommentControllerIntegrationTest {
     @Test
     public void testDelete_invalidUser() throws Exception {
         // when:
-        mockMvc.perform(delete("/api/v1/comments/{id}", commentId)
+        mockMvc.perform(delete("/api/v1/comments/{id}", deleteCommentId)
                         .with(httpBasic("nonExistingUser", "password"))
                         )
             .andDo(print())
@@ -296,6 +314,23 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", unauthorizedCommentId)
                         .with(httpBasic("user1", "user1"))
+                        )
+            .andDo(print())
+            .andExpect(status().isForbidden())
+            ;
+
+        // then:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
+    }
+
+    @Test
+    public void testDelete_noRole() throws Exception {
+        // given:
+        assertEquals(unauthorizedComment, service.findById(unauthorizedCommentId));
+
+        // when:
+        mockMvc.perform(delete("/api/v1/comments/{id}", unauthorizedCommentId)
+                        .with(httpBasic("norole", "norole"))
                         )
             .andDo(print())
             .andExpect(status().isForbidden())
