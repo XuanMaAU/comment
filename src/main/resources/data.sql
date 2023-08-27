@@ -12,6 +12,6 @@ INSERT INTO comment(id, user_id, comment) VALUES(4, 101, 'This is the fourth com
 INSERT INTO comment(id, user_id, comment) VALUES(5, 101, 'This is the fifth comment.');
 INSERT INTO comment(id, user_id, comment) VALUES(6, 101, 'This is the sixth comment.');
 
-INSERT INTO user_role(id, user_id, role) VALUES(1, 1, 'ADMIN');
-INSERT INTO user_role(id, user_id, role) VALUES(2, 51, 'USER');
-INSERT INTO user_role(id, user_id, role) VALUES(3, 101, 'USER');
+INSERT INTO user_role(id, user_id, role) VALUES(nextval('user_role_SEQ'), 1, 'ADMIN');
+INSERT INTO user_role(id, user_id, role) VALUES(nextval('user_role_SEQ'), 51, 'USER');
+INSERT INTO user_role(id, user_id, role) VALUES(nextval('user_role_SEQ'), 101, 'USER');
