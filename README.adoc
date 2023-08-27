@@ -29,7 +29,12 @@ The "edit" API is implemented as `POST` to just modify the comment content alone
 I am no expert on security, hopefully my novice understanding of the authentication and authorization
 still makes some sense.
 
-Authentication is implemented as HTTP BASIC, the users and password are specified as below:
+Authentication is implemented as HTTP BASIC with a *DAO Authentication Provider* which loads users
+from database and gets authenticated within the Spring Security framework. *BCrypt Password
+Encoder* is used to encode and verify the password stored in database instead of clear text
+or other simple hashing mechanism.
+
+The users and password are specified as below:
 
 |===
 | User Name | Password | Role
@@ -50,13 +55,8 @@ HTTP BASIC authentication mechanism is not recommended in production for the fol
 * Could be vulnerable to cross-site attacks
 * There will be no session management and no logout function.
 
-Currently authentication is implemented with a *DAO Authentication Provider* which loads users
-from database and gets authenticated within the Spring Security framework. *BCrypt Password
-Encoder* is used to encode and verify the password stored in database instead of clear text
-or other simple hashing mechanism.
-
 For service APIs in production, it is good to use API key and token based authentication
-like JWT with Auth2 (with a in-house authorization server) to provide the access token
+like JWT with OAuth2 (with a in-house authorization server) to provide the access token
 and refresh token with expiration time.
 
 If third-party identities are allowed, OAuth2 can be used for third-party authorization servers.
