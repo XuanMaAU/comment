@@ -1,5 +1,7 @@
 package org.mmx.comment.security;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,8 +53,13 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable())
             //.csrf(Customizer.withDefaults())
             .cors(Customizer.withDefaults())
+            // allow h2-console
+            .headers(headers -> headers.frameOptions(frameOperations -> frameOperations.sameOrigin()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+            .authorizeHttpRequests(authorize -> authorize
+                                   // allow h2-console without authentication
+                                   .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                                   .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             ;
 
