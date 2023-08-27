@@ -188,6 +188,48 @@ public class CommentControllerIntegrationTest {
     }
 
     @Test
+    public void testEdit_user_emptyContent() throws Exception {
+        // given:
+        assertEquals(oldComment, service.findById(commentId));
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(httpBasic("user2", "user2"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(commentId))
+            .andExpect(jsonPath("$.userId").value(userId))
+            .andExpect(jsonPath("$.comment").value(""))
+            ;
+
+        // then:
+        assertEquals("", service.findById(commentId).getComment());
+    }
+
+    @Test
+    public void testEdit_user_nullContent() throws Exception {
+        // given:
+        assertEquals(oldComment, service.findById(commentId));
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(httpBasic("user2", "user2"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(commentId))
+            .andExpect(jsonPath("$.userId").value(userId))
+            .andExpect(jsonPath("$.comment").value(""))
+            ;
+
+        // then:
+        assertEquals("", service.findById(commentId).getComment());
+    }
+
+    @Test
     public void testEdit_user_notFound() throws Exception {
         // given:
         assertThrows(CommentNotFoundException.class, () -> { service.findById(nonExistingCommentId); });

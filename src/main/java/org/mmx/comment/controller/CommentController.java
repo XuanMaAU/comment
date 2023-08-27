@@ -54,8 +54,13 @@ public class CommentController {
     @PreAuthorize("@authz.canEdit(#root, #id)")
     @PostMapping("/{id}/editComment")
     public ResponseEntity<CommentDto> edit(@PathVariable long id,
-                                           @RequestBody String content) {
+                                           @RequestBody(required = false) String content) {
         log.debug("Edit comment: id = {}, content = {}", id, content);
+
+        // make it blank instead of null
+        if (content == null) {
+            content = "";
+        }
 
         // edit the comment
         Comment comment = commentService.editComment(id, content);

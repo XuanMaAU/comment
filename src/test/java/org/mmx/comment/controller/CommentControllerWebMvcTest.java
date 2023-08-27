@@ -38,6 +38,9 @@ public class CommentControllerWebMvcTest {
     private long authorId = 2l;
     private String newContent = "this is the new comment";
     private Comment expComment = new Comment(Long.valueOf(commentId), Long.valueOf(authorId), newContent);
+    private Comment emptyContentComment = new Comment(Long.valueOf(commentId), Long.valueOf(authorId), "");
+
+    /* ======== edit ======== */
 
     @Test
     @WithMockUser
@@ -88,6 +91,46 @@ public class CommentControllerWebMvcTest {
             .andExpect(status().isUnauthorized())
             ;
     }
+
+    @WithMockUser
+    @Test
+    public void testEdit_emptyContent() throws Exception {
+        // given:
+        doReturn(emptyContentComment).when(service).editComment(commentId, "");
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(""))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(commentId))
+            .andExpect(jsonPath("$.userId").value(authorId))
+            .andExpect(jsonPath("$.comment").value(""))
+            ;
+    }
+
+    @WithMockUser
+    @Test
+    public void testEdit_nullContent() throws Exception {
+        // given:
+        doReturn(emptyContentComment).when(service).editComment(commentId, "");
+
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(commentId))
+            .andExpect(jsonPath("$.userId").value(authorId))
+            .andExpect(jsonPath("$.comment").value(""))
+            ;
+    }
+
+    /* ======== delete ======== */
 
     @Test
     @WithMockUser
