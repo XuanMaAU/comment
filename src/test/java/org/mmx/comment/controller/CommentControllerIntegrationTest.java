@@ -80,11 +80,25 @@ public class CommentControllerIntegrationTest {
             ;
     }
 
+    /* ======== Edit Test cases ======== */
+
     @Test
     public void testEdit_wrongPassword() throws Exception {
         // when:
         mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
                         .with(httpBasic("user2", "wrong password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContent))
+            .andDo(print())
+            .andExpect(status().isUnauthorized())
+            ;
+    }
+
+    @Test
+    public void testEdit_invalidUser() throws Exception {
+        // when:
+        mockMvc.perform(post("/api/v1/comments/{id}/editComment", commentId)
+                        .with(httpBasic("nonExistingUser", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContent))
             .andDo(print())
@@ -239,13 +253,14 @@ public class CommentControllerIntegrationTest {
             ;
     }
 
+    /* ======== Delete Test cases ======== */
+
     @Test
     public void testDelete_invalidId() throws Exception {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", "testId")
                         .with(httpBasic("admin", "admin"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newContent))
+                        )
             .andDo(print())
             .andExpect(status().isBadRequest())
             ;
@@ -256,10 +271,20 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(patch("/api/v1/comments/{id}", deleteCommentId)
                         .with(httpBasic("user1", "user1"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newContent))
+                        )
             .andDo(print())
             .andExpect(status().isMethodNotAllowed())
+            ;
+    }
+
+    @Test
+    public void testDelete_invalidUser() throws Exception {
+        // when:
+        mockMvc.perform(delete("/api/v1/comments/{id}", commentId)
+                        .with(httpBasic("nonExistingUser", "password"))
+                        )
+            .andDo(print())
+            .andExpect(status().isUnauthorized())
             ;
     }
 
@@ -271,7 +296,7 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", unauthorizedCommentId)
                         .with(httpBasic("user1", "user1"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isForbidden())
             ;
@@ -288,7 +313,7 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", deleteCommentId)
                         .with(httpBasic("user1", "user1"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isNoContent())
             ;
@@ -305,7 +330,7 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", nonExistingCommentId)
                         .with(httpBasic("user2", "user2"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.commentId").value(nonExistingCommentId))
@@ -320,7 +345,7 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", adminDeleteCommentId)
                         .with(httpBasic("admin", "admin"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isNoContent())
             ;
@@ -337,7 +362,7 @@ public class CommentControllerIntegrationTest {
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", nonExistingCommentId)
                         .with(httpBasic("admin", "admin"))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.commentId").value(nonExistingCommentId))
@@ -351,7 +376,7 @@ public class CommentControllerIntegrationTest {
 
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", unauthorizedCommentId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isUnauthorized())
             ;
@@ -367,7 +392,7 @@ public class CommentControllerIntegrationTest {
 
         // when:
         mockMvc.perform(delete("/api/v1/comments/{id}", nonExistingCommentId)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        )
             .andDo(print())
             .andExpect(status().isUnauthorized())
             ;
