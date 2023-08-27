@@ -11,18 +11,17 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.mmx.comment.CommentTestBase;
+import org.mmx.comment.AppTestBase;
 import org.mmx.comment.dao.CommentRepository;
 import org.mmx.comment.domain.Comment;
 import org.mmx.comment.exception.CommentNotFoundException;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 /**
  * Unit test cases for CommentServiceImpl
  */
-public class CommentServiceImplTest extends CommentTestBase {
+public class CommentServiceImplTest extends AppTestBase {
     @Mock
     private CommentRepository repo;
 
@@ -99,7 +98,7 @@ public class CommentServiceImplTest extends CommentTestBase {
     }
 
     private void testNotFoundException(Executable method) {
-        CommentNotFoundException ex = Assertions.assertThrows(CommentNotFoundException.class, method);
+        CommentNotFoundException ex = assertThrows(CommentNotFoundException.class, method);
         assertEquals(expComment.getId(), ex.getId());
     }
 }

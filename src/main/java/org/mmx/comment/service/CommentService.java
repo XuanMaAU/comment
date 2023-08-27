@@ -30,6 +30,8 @@ public interface CommentService {
     /**
      * Delete a comment
      *
+     * @param id the comment id
+     *
      * @throws CommentNotFoundException if the comment with the id doesn't exist in the database
      */
     void delete(long id);

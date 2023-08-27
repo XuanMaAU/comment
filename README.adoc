@@ -1,0 +1,72 @@
+= Comment Service
+
+== Execute
+
+* The service can be executed as `./gradlew bootRun`, and will be running on port 8080.
+* The database can be checked at `http://localhost:8080/h2-console/` with url `jdbc:h2:mem:commentdb` and default username (`sa`) and password (blank)
+
+== REST API
+
+[cols="1, 3, 2, 2"]
+|===
+| Method | URL | Request Body | Response Body
+
+| POST | /api/v1/comments/{id}/editComment | <the new comment content> | The new comment object
+| DELETE | /api/v1/comments/{id} | N/A | | N/A
+|===
+
+[NOTE]
+--
+The comment id is from 1 to 6 as specified in link:src/main/resources/data.sql[].
+
+The "edit" API is implemented as `POST` to just modify the comment content alone.
+
+* To replace the whole comment object, `PUT` should be considered.
+* To update partial fields in the comment object, `PATCH` should be considered.
+--
+== Authenticate
+
+I am no expert on security, hopefully my novice understanding of the authentication and authorization
+still makes some sense.
+
+Authentication is implemented as HTTP BASIC with a *DAO Authentication Provider* which loads users
+from database and gets authenticated within the Spring Security framework. *BCrypt Password
+Encoder* is used to encode and verify the password stored in database instead of clear text
+or other simple hashing mechanism.
+
+The users and password are specified as below:
+
+|===
+| User Name | Password | Role
+
+| admin | admin | ADMIN
+| user1 | user1 | USER
+| user2 | user2 | USER
+| norole | norole |
+|===
+
+[NOTE]
+--
+HTTP BASIC authentication mechanism is not recommended in production for the following reasons:
+
+* The password is sent in BASE-64 encoding, which can be considered as clear text.
+* The username and password are sent in every request
+* The password could be cache on client side
+* Could be vulnerable to cross-site attacks
+* There will be no session management and no logout function.
+
+For service APIs in production, it is good to use API key and token based authentication
+like JWT with OAuth2 (with a in-house authorization server) to provide the access token
+and refresh token with expiration time.
+
+If third-party identities are allowed, OAuth2 can be used for third-party authorization servers.
+--
+
+== Authorization
+
+Authorization is implemented with method security by enabling the *Pre- and Post Authorize*.
+The permission checking is implemented in a *custom authorizer* to check "`canEdit`" and "`canDelete`"
+for the current user against the author (user_id) of the specified comment.
+
+If SSO (Single Sign-On) is used for all services in production, Open ID Connect (OIDC) or SAML2 can be used
+to provide SSO implementation.

@@ -1,11 +1,13 @@
 spring:
+    datasource:
+        url: jdbc:h2:mem:commentdb
     jpa:
         defer-datasource-initialization: true
-        show-sql: true
-        properties.hibernate.format_sql: true
+        #show-sql: true
+        #properties.hibernate.format_sql: true
     h2:
         console.enabled: true
 
-logging.level.org.hibernate.orm.jdbc.bind: trace
-logging.level.org.springframework.security: TRACE
-logging.level.org.mmx.comment: debug
+#logging.level.org.hibernate.orm.jdbc.bind: trace
+#logging.level.org.springframework.security: TRACE
+#logging.level.org.mmx.comment: debug
