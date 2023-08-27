@@ -12,16 +12,12 @@ import org.mmx.comment.domain.UserRole;
 import org.mmx.comment.security.SecurityRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 /**
  * Unit test cases for UserRepository
  */
 @DataJpaTest
 public class UserRepositoryTest {
-    @Autowired
-    private TestEntityManager entityManager;
-
     @Autowired
     private UserRepository repo;
 

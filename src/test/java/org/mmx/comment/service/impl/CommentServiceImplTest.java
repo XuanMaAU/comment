@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mmx.comment.AppTestBase;

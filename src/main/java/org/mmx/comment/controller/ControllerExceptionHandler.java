@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Exception handler to process exceptions and errors
  */
+@Slf4j
 @ControllerAdvice
 @ResponseBody
 public class ControllerExceptionHandler {
@@ -22,7 +25,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = { CommentNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage commentNotFoundException(CommentNotFoundException e, WebRequest request) {
+        log.warn("Comment not found", e);
         return new CommentNotFoundErrorMessage(e.getId(), e.getMessage());
     }
-
 }

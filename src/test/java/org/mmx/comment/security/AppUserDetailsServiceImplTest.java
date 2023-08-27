@@ -55,7 +55,7 @@ public class AppUserDetailsServiceImplTest extends AppTestBase {
         // then:
         assertThrows(UsernameNotFoundException.class,
                      () -> {
-                         AppUserDetails details = (AppUserDetails)service.loadUserByUsername("user");
+                         service.loadUserByUsername("user");
                      });
     }
 }
