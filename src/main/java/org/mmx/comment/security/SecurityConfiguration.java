@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.CachingUserDetailsService;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,9 +57,12 @@ public class SecurityConfiguration {
             // allow h2-console
             .headers(headers -> headers.frameOptions(frameOperations -> frameOperations.sameOrigin()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .securityMatcher(EndpointRequest.toAnyEndpoint())
             .authorizeHttpRequests(authorize -> authorize
                                    // allow h2-console without authentication
                                    .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                                   // allow actuator for admin
+                                   .requestMatchers(antMatcher("/actuator/**")).hasAuthority("ADMIN")
                                    .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             ;
