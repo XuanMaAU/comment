@@ -12,6 +12,6 @@ public class UserNotFoundException extends UserException {
     }
 
     public UserNotFoundException(Long id, String name, Throwable cause) {
-        super(id, name, null, cause);
+        super(id, name, "User with id " + id + " not found", cause);
     }
 }

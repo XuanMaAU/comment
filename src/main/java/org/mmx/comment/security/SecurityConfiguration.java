@@ -57,7 +57,6 @@ public class SecurityConfiguration {
             // allow h2-console
             .headers(headers -> headers.frameOptions(frameOperations -> frameOperations.sameOrigin()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .securityMatcher(EndpointRequest.toAnyEndpoint())
             .authorizeHttpRequests(authorize -> authorize
                                    // allow h2-console without authentication
                                    .requestMatchers(antMatcher("/h2-console/**")).permitAll()
