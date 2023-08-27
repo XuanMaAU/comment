@@ -13,12 +13,11 @@ public class CommentNotFoundException extends CommentException {
     private long id;
 
     public CommentNotFoundException(long id) {
-        this(id, null);
-        this.id = id;
+        this(id, "Comment with id " + id + " not found", null);
     }
 
-    public CommentNotFoundException(long id, Throwable cause) {
-        super(cause);
+    public CommentNotFoundException(long id, String message, Throwable cause) {
+        super(message, cause);
         this.id = id;
     }
 }
