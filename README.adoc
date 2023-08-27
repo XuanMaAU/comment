@@ -4,6 +4,7 @@
 
 * The service can be executed as `./gradlew bootRun`, and will be running on port 8080.
 * The database can be checked at `http://localhost:8080/h2-console/` with url `jdbc:h2:mem:commentdb` and default username (`sa`) and password (blank)
+* The actuator is enabled at `http://localhost:8080/actuator` and can only be accessed with ADMIN.
 
 == REST API
 
@@ -24,7 +25,7 @@ The "edit" API is implemented as `POST` to just modify the comment content alone
 * To replace the whole comment object, `PUT` should be considered.
 * To update partial fields in the comment object, `PATCH` should be considered.
 --
-== Authenticate
+== Authentication
 
 I am no expert on security, hopefully my novice understanding of the authentication and authorization
 still makes some sense.
@@ -51,7 +52,7 @@ HTTP BASIC authentication mechanism is not recommended in production for the fol
 
 * The password is sent in BASE-64 encoding, which can be considered as clear text.
 * The username and password are sent in every request
-* The password could be cache on client side
+* The password could be cached on client side
 * Could be vulnerable to cross-site attacks
 * There will be no session management and no logout function.
 
@@ -68,5 +69,5 @@ Authorization is implemented with method security by enabling the *Pre- and Post
 The permission checking is implemented in a *custom authorizer* to check "`canEdit`" and "`canDelete`"
 for the current user against the author (user_id) of the specified comment.
 
-If SSO (Single Sign-On) is used for all services in production, Open ID Connect (OIDC) or SAML2 can be used
-to provide SSO implementation.
+If SSO (Single Sign-On) is used for all services in production, OpenID Connect (OIDC) on top of OAuth2
+or SAML2 can be used to provide SSO support.

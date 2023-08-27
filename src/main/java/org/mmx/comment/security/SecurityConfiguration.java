@@ -61,6 +61,9 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
                                    // allow h2-console without authentication
                                    .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                                   // allow health and info
+                                   .requestMatchers(antMatcher("/actuator/health")).permitAll()
+                                   .requestMatchers(antMatcher("/actuator/info")).permitAll()
                                    // allow actuator for admin
                                    .requestMatchers(antMatcher("/actuator/**")).hasAuthority("ADMIN")
                                    .anyRequest().authenticated())
