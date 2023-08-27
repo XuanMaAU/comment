@@ -3,7 +3,7 @@ package org.mmx.comment.service;
 import org.mmx.comment.domain.User;
 
 /**
- * User service interface
+ * User service to manipulate users
  */
 public interface UserService {
     /**

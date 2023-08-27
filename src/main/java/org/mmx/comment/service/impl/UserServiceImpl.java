@@ -7,9 +7,12 @@ import org.mmx.comment.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * User Service implementation with database repository
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     /**
@@ -24,6 +27,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByName(String name) {
+        log.debug("Find user by name \"{}\"", name);
+
         return repo
             .findByName(name)
             .orElseThrow(() -> new UserNotFoundException(null, name));

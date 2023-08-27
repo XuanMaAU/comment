@@ -78,6 +78,8 @@ public class CommentController {
         // delete the comment object
         commentService.delete(id);
 
+        log.debug("Delete comment: id = {} deleted", id);
+
         // 204 is returned if the comment is deleted successfully
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
