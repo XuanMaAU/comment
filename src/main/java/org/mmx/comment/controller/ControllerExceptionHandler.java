@@ -1,5 +1,6 @@
 package org.mmx.comment.controller;
 
+import org.mmx.comment.exception.AppException;
 import org.mmx.comment.exception.CommentNotFoundErrorMessage;
 import org.mmx.comment.exception.CommentNotFoundException;
 import org.mmx.comment.exception.ErrorMessage;
@@ -27,5 +28,16 @@ public class ControllerExceptionHandler {
     public ErrorMessage commentNotFoundException(CommentNotFoundException e, WebRequest request) {
         log.warn("Comment not found", e);
         return new CommentNotFoundErrorMessage(e.getId(), e.getMessage());
+    }
+
+    /**
+     * Handle Generic AppException
+     */
+    @ExceptionHandler(value = { AppException.class })
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public void appException(AppException e, WebRequest request) {
+        // may need to handle specific exceptions
+        // currently just let Spring handle it
+        throw e;
     }
 }
